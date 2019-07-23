@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <IncludePath>$(SolutionDir)3rdParty\Ranger3\include;$(SolutionDir)3rdParty\Ranger3\include\Common\public;$(SolutionDir)3rdParty\Ranger3\include\GenIRanger\public;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)3rdParty\Ranger3\lib\debug;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>GenIRanger.lib;SampleApiDll.lib;SampleCommon.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>
