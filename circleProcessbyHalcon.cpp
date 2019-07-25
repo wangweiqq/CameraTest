@@ -167,6 +167,10 @@ HObject Mat2HObject(const cv::Mat &image)
 		for (i = 0; i < hgt; i++)
 			memcpy(data + wid*i, image.data + image.step*i, wid * 4);
 		GenImage1(&Hobj, "real", wid, hgt, (Hlong)data);
+		//WriteImage(Hobj, "tiff", 0, "test");
+		ofstream of_1("test_cv_to_h.txt");
+		of_1.write((char*)(data), sizeof(float)*2560*3000);
+		of_1.close();
 		delete[] data;
 		data = NULL;
 	}

@@ -25,8 +25,10 @@ HObject convertToHObject(Sample::ImgTable & ImgT)
 	{
 		memcpy(data + width*i, &ImgT.range[0] + width*i, width*4);
 	}
-	GenImage1(&dst, 'real', width, height, (Hlong)data);
-
+	//GenImage1(&dst, 'real', width, height, (Hlong)data);
+	std::ofstream of_2("test_range_to_h.txt");
+	of_2.write((char*)(data), sizeof(float)*width*height);
+	of_2.close();
 	delete[] data;
 	data = NULL;
 	return dst;
