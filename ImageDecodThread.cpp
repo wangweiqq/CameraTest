@@ -76,6 +76,7 @@ ImageDecodThread* ImageDecodThread::Instance() {
 	return &pDecod;
 }
 void ImageDecodThread::run() {
+	//char fileName[1024];
 	while (!IsStopThread) {
 		Sample::ImgTable imgTable = ImgTableDequeue();
 		if (imgTable.isEmpty()) {
@@ -83,12 +84,12 @@ void ImageDecodThread::run() {
 		}
 		else {
 			cv::Mat t_range = convertToMatR(imgTable);
-
-			QString file = QString("D:/0724/g/%1.tiff").arg(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"));
-			qDebug() << file;
-			const char* f = file.toLocal8Bit();
-			qDebug() << f;
-			cv::imwrite(f,t_range);
+			//sprintf(fileName, "D:/0724/g/%s.tiff", QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"))
+			//QString file = QString("D:/0724/g/%1.tiff").arg(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"));
+			//qDebug() << file;
+			//const char* f = file.toLocal8Bit();
+			//qDebug() << f;
+			cv::imwrite("D:/0724/g/1.tiff",t_range);
 
 			/*QString file = QString("D:/0722/%1.tiff").arg(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"));
 			qDebug() << file;

@@ -12,7 +12,8 @@ class CamCaptureThread : public QThread
 {
 	Q_OBJECT
 public:
-	static CamCaptureThread* Instance();
+	CamCaptureThread(QObject *parent = NULL);
+	//static CamCaptureThread* Instance();
 	~CamCaptureThread();
 	/*初始化摄像机*/
 	bool InitCamDevice(QString csvPath, QString calibXml);
@@ -25,7 +26,6 @@ public:
 signals:
 	void CaptureImage();
 protected:
-	CamCaptureThread(QObject *parent = NULL);
 private:
 	//int NumImg = 0;//线程读几张图片退出
 	bool IsStopThread = false;//是否停止线程

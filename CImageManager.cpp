@@ -33,7 +33,7 @@ CImageManager* CImageManager::Instance() {
 CImageManager::CImageManager(QObject *parent): QObject(parent)
 {
 	ListImageTable.clear();
-	camThread = CamCaptureThread::Instance();
+	camThread = new CamCaptureThread();
 	decodeThread = ImageDecodThread::Instance();
 	connect(camThread, SIGNAL(CaptureImage()), this, SIGNAL(CaptureImage()));
 	connect(decodeThread, SIGNAL(DecodeImage()), this, SIGNAL(DecodeImage()));
@@ -42,6 +42,8 @@ CImageManager::CImageManager(QObject *parent): QObject(parent)
 CImageManager::~CImageManager()
 {
 	StopThread();
+	delete camThread;
+	camThread = NULL;
 }
 /*初始化参数*/
 bool  CImageManager::Init(QString csv, QString calibxml) {
@@ -71,5 +73,9 @@ void CImageManager::StopThread() {
 	}*/
 }
 bool CImageManager::ChangedCamConfig(QString csvPath, QString calibXml) {
-    return camThread->changeCamConfig(csvPath, calibXml);
+	delete camThread;
+	camThread = NULL;
+	camThread = new CamCaptureThread();
+	return Init(csvPath, calibXml);
+   // return camThread->changeCamConfig(csvPath, calibXml);
 }

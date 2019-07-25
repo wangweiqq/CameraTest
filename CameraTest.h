@@ -11,8 +11,8 @@ public:
 public slots:
 	void pushButton_onClick();
 	void pushButton2_onClick();
-    void on_btnConfig1_onclicked();
-    void on_btnConfig2_onclicked();
+    void on_btnConfig1_clicked();
+    void on_btnConfig2_clicked();
 	/*void onThreadStarted();
 	void onThreadFinished();*/
 	void onCaptureImage();

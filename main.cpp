@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 	/*QString csv2 = "D:\\SICKCameraConfig\\RightSickConfigFile.csv";
 	QString calibxml2 = "D:\\SICKCameraConfig\\Right-CalibrationResult.xml";*/
     CConfigManager* config = CConfigManager::getInstance();
-	if (!CImageManager::Instance()->Init(config->csvRight, config->calibxmlRight)) {
+	if (!CImageManager::Instance()->Init(config->csvLeft, config->calibxmlLeft)) {
 		ShowMessageBox1(QMessageBox::Critical, "´íÎó", "³õÊ¼»¯ÉãÏñ»ú´íÎó!");
 		return -1;
 	}

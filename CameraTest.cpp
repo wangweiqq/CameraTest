@@ -29,7 +29,7 @@ void CameraTest::pushButton2_onClick() {
 	//CamCaptureThread::Instance()->StopCapture();
 }
 //R
-void CameraTest::on_btnConfig1_onclicked() {
+void CameraTest::on_btnConfig1_clicked() {
     CConfigManager* config = CConfigManager::getInstance();
     bool bl = CImageManager::Instance()->ChangedCamConfig(config->csvRight, config->calibxmlRight);
     if (!bl) {
@@ -37,9 +37,9 @@ void CameraTest::on_btnConfig1_onclicked() {
     }
 }
 //L
-void CameraTest::on_btnConfig2_onclicked() {
+void CameraTest::on_btnConfig2_clicked() {
     CConfigManager* config = CConfigManager::getInstance();
-    bool bl = CImageManager::Instance()->ChangedCamConfig(config->csvRight, config->calibxmlRight);
+    bool bl = CImageManager::Instance()->ChangedCamConfig(config->csvLeft, config->calibxmlLeft);
     if (!bl) {
         ShowMessageBox1(QMessageBox::Critical, "´íÎó", "ÇĞ»»ÉãÏñ»úÅäÖÃ´íÎó!");
     }
