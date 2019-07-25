@@ -70,3 +70,6 @@ void CImageManager::StopThread() {
 		delete ImgTableDequeue();
 	}*/
 }
+bool CImageManager::ChangedCamConfig(QString csvPath, QString calibXml) {
+    return camThread->changeCamConfig(csvPath, calibXml);
+}

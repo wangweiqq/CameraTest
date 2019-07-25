@@ -17,6 +17,7 @@ public:
 	void StartThread();
 	/*停止线程*/
 	void StopThread();
+    bool ChangedCamConfig(QString csvPath, QString calibXml);
 private:
 	CImageManager(QObject *parent = nullptr);
 signals:

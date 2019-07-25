@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QDateTime>
 #include <QDebug>
+#include "cconfigmanager.h"
 void ShowMessageBox1(QMessageBox::Icon type, QString title, QString content) {
 	QMessageBox box(type, title, content);
 	box.setStandardButtons(QMessageBox::Ok);
@@ -19,13 +20,15 @@ int main(int argc, char *argv[])
 
 
 	//QString csv1 = "D:\\SICK-Images\\Ranger3ConfigFile.csv";
-	QString csv1 = "D:\\work\\CameraTest\\testcalib0722\\Cam.csv";
-	QString calibxml1 = "D:\\work\\CameraTest\\testcalib0722\\CalibrationResult.xml";
-	/*QString csv1 = "D:\\SICKCameraConfig\\RightSickConfigFile.csv";
+	/*QString csv1 = "D:\\work\\CameraTest\\testcalib0722\\Cam.csv";
+	QString calibxml1 = "D:\\work\\CameraTest\\testcalib0722\\CalibrationResult.xml";*/
+	//QString csv1 = "D:\\SICKCameraConfig\\RightSickConfigFile.csv";
+	/*QString csv1 = "D:\\SICKCameraConfig\\RightSickConfigFile_MotionPattern.csv";
 	QString calibxml1 = "D:\\SICKCameraConfig\\Right-CalibrationResult.xml";*/
 	/*QString csv2 = "D:\\SICKCameraConfig\\RightSickConfigFile.csv";
 	QString calibxml2 = "D:\\SICKCameraConfig\\Right-CalibrationResult.xml";*/
-	if (!CImageManager::Instance()->Init(csv1, calibxml1)) {
+    CConfigManager* config = CConfigManager::getInstance();
+	if (!CImageManager::Instance()->Init(config->csvRight, config->calibxmlRight)) {
 		ShowMessageBox1(QMessageBox::Critical, "´íÎó", "³õÊ¼»¯ÉãÏñ»ú´íÎó!");
 		return -1;
 	}

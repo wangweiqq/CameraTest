@@ -3,6 +3,9 @@
 #include <QDebug>
 #include <QlineEdit>
 #include "CImageManager.h"
+#include "cconfigmanager.h"
+#include <QMessageBox>
+extern void ShowMessageBox1(QMessageBox::Icon type, QString title, QString content);
 CameraTest::CameraTest(QWidget *parent)
 	: QDialog(parent)
 {
@@ -24,6 +27,22 @@ void CameraTest::pushButton2_onClick() {
 	CImageManager::Instance()->StopThread();
 	ui.label_2->setText("Í£Ö¹È¡Í¼");
 	//CamCaptureThread::Instance()->StopCapture();
+}
+//R
+void CameraTest::on_btnConfig1_onclicked() {
+    CConfigManager* config = CConfigManager::getInstance();
+    bool bl = CImageManager::Instance()->ChangedCamConfig(config->csvRight, config->calibxmlRight);
+    if (!bl) {
+        ShowMessageBox1(QMessageBox::Critical, "´íÎó", "ÇÐ»»ÉãÏñ»úÅäÖÃ´íÎó!");
+    }
+}
+//L
+void CameraTest::on_btnConfig2_onclicked() {
+    CConfigManager* config = CConfigManager::getInstance();
+    bool bl = CImageManager::Instance()->ChangedCamConfig(config->csvRight, config->calibxmlRight);
+    if (!bl) {
+        ShowMessageBox1(QMessageBox::Critical, "´íÎó", "ÇÐ»»ÉãÏñ»úÅäÖÃ´íÎó!");
+    }
 }
 //void  CameraTest::onThreadStarted() {
 //	ui.label_2->setText("Ïß³Ì¿ªÊ¼");

@@ -23,9 +23,9 @@ HObject convertToHObject(Sample::ImgTable & ImgT)
 	qDebug() << "&ImgT.range[0]:" << &ImgT.range[0];
 	for (size_t i = 0; i < ImgT.rows; i++)
 	{
-		memcpy(data + width*i, &ImgT.range[0] + width*i, width);
+		memcpy(data + width*i, &ImgT.range[0] + width*i, width*4);
 	}
-	GenImage1(&dst, 'real', (HTuple)width, (HTuple)height, (Hlong)data);
+	GenImage1(&dst, 'real', width, height, (Hlong)data);
 
 	delete[] data;
 	data = NULL;
@@ -82,18 +82,18 @@ void ImageDecodThread::run() {
 		else {
 			cv::Mat t_range = convertToMatR(imgTable);
 
-			/*QString file = QString("D:/0722/%1.tiff").arg(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"));
+			QString file = QString("D:/0724/g/%1.tiff").arg(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"));
 			qDebug() << file;
 			const char* f = file.toLocal8Bit();
 			qDebug() << f;
-			cv::imwrite(f,t_range);*/
+			cv::imwrite(f,t_range);
 
 			/*QString file = QString("D:/0722/%1.tiff").arg(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"));
 			qDebug() << file;
 			const char* f = file.toLocal8Bit();
 			qDebug() << f;*/
-			/*HObject t_range = convertToHObject(imgTable);
-			WriteImage(t_range, "tiff", 0, "D:/0722/1.tiff");*/
+			/*HObject ht_range = convertToHObject(imgTable);
+			WriteImage(ht_range, "tiff", 0, "D:/0722/1.tiff");*/
 			CircleProcess(t_range);
 
 			qDebug() << "解码结束";

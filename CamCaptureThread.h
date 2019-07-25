@@ -7,6 +7,7 @@
 #include "Ranger3.h"
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <QMutex>
 class CamCaptureThread : public QThread
 {
 	Q_OBJECT
@@ -15,6 +16,7 @@ public:
 	~CamCaptureThread();
 	/*初始化摄像机*/
 	bool InitCamDevice(QString csvPath, QString calibXml);
+    bool changeCamConfig(QString csvPath, QString calibXml);
 	void run();
 	/*开始捕捉图像*/
 	void StartCapture();
@@ -32,4 +34,5 @@ private:
 	//std::unique_ptr<ImageGabber> pIG = nullptr;
 	std::string para_csv_path;// = "D:\\SICK-Images\\Ranger3ConfigFile.csv";
 	std::string calib_xml_path;// = "D:\\SICK-Images\\RightLazerCalibrationResult.xml";
+    QMutex mutex;
 };

@@ -5,7 +5,7 @@
 #include <memory>
 #include <QDateTime>
 #include<HalconCpp.h>
-
+#include <QMutexLocker>
 using namespace HalconCpp; 
 extern HObject Mat2HObject(const cv::Mat &image);
 extern void ImgTableEnqueue(Sample::ImgTable& p);
@@ -33,9 +33,7 @@ CamCaptureThread* CamCaptureThread::Instance()
 	return &capture;
 }
 bool CamCaptureThread::InitCamDevice(QString csvPath, QString calibXml) {
-	para_csv_path = csvPath.toLocal8Bit();
-	calib_xml_path = calibXml.toLocal8Bit();
-	qDebug() << "para_csv_path：" << para_csv_path.c_str() << ",calib_xml_path=" << calib_xml_path.c_str();
+	
 	pR3S = std::make_shared<R3S>();
 	if (pR3S->getConsumer() == nullptr)
 	{
@@ -67,39 +65,88 @@ bool CamCaptureThread::InitCamDevice(QString csvPath, QString calibXml) {
 		printf("Error: Init camara failed, please make sure the camera can be found in Ranger3Studio. \n");
 		return false;
 	}
-
+    changeCamConfig(csvPath, calibXml);
 	//  --- Open a Ranger3.
-	Ecode ec = pR3_1->openCamera();
-	if (ec == Ecode::OPEN_CAM_ERROR)
-	{
-		printf("Error: Open camara failed");
-		return false;
-	}
-	qDebug() << "para_csv_path"<< para_csv_path.c_str();
-	qDebug() << "calib_xml_path = " << calib_xml_path.c_str();
-	ec = pR3_1->setCamera(0.02, para_csv_path, calib_xml_path); // 0.01 is just an example.
-	if (ec != Ecode::All_OK)
-	{
-		printf("Error: setCamera failed. para_csv_path=%s, calib_xml_path=%s \n",
-			para_csv_path.c_str(), calib_xml_path.c_str());
-		switch (ec)
-		{
-		case Ecode::SET_CAM_ERROR:
-			printf("Error: SET_CAM_ERROR \n");
-			break;
-		case Ecode::XML_PATH_ERROR:
-			printf("Error: XML_PATH_ERROR \n");
-			break;
-		case Ecode::CSV_PATH_ERROR:
-			printf("Error: CSV_PATH_ERROR \n");
-			break;
-		default:
-			printf("Error: UNKNOWN_ERROR \n");
-			break;
-		}
-		return false;
-	}
+	//Ecode ec = pR3_1->openCamera();
+	//if (ec == Ecode::OPEN_CAM_ERROR)
+	//{
+	//	printf("Error: Open camara failed");
+	//	return false;
+	//}
+	//qDebug() << "para_csv_path"<< para_csv_path.c_str();
+	//qDebug() << "calib_xml_path = " << calib_xml_path.c_str();
+	//ec = pR3_1->setCamera(0.02, para_csv_path, calib_xml_path); // 0.01 is just an example.
+	//if (ec != Ecode::All_OK)
+	//{
+	//	printf("Error: setCamera failed. para_csv_path=%s, calib_xml_path=%s \n",
+	//		para_csv_path.c_str(), calib_xml_path.c_str());
+	//	switch (ec)
+	//	{
+	//	case Ecode::SET_CAM_ERROR:
+	//		printf("Error: SET_CAM_ERROR \n");
+	//		break;
+	//	case Ecode::XML_PATH_ERROR:
+	//		printf("Error: XML_PATH_ERROR \n");
+	//		break;
+	//	case Ecode::CSV_PATH_ERROR:
+	//		printf("Error: CSV_PATH_ERROR \n");
+	//		break;
+	//	default:
+	//		printf("Error: UNKNOWN_ERROR \n");
+	//		break;
+	//	}
+	//	return false;
+	//}
 	return true;
+}
+bool CamCaptureThread::changeCamConfig(QString csvPath, QString calibXml) {
+    QMutexLocker locker(&mutex);
+    para_csv_path = csvPath.toLocal8Bit();
+    calib_xml_path = calibXml.toLocal8Bit();
+    qDebug() << "para_csv_path：" << para_csv_path.c_str() << ",calib_xml_path=" << calib_xml_path.c_str();
+    if (pR3_1 == NULL) {
+        // --- Init one Ranger3.
+        pR3_1 = std::make_unique<R3>(pR3S);
+        // check
+        if (pR3_1->getDeviceName() == "ERROR")
+        {
+            printf("Error: Init camara failed, please make sure the camera can be found in Ranger3Studio. \n");
+            return false;
+        }
+
+        //  --- Open a Ranger3.
+        Ecode ec = pR3_1->openCamera();
+        if (ec == Ecode::OPEN_CAM_ERROR)
+        {
+            printf("Error: Open camara failed");
+            return false;
+        }
+        
+    }
+    qDebug() << "para_csv_path" << para_csv_path.c_str();
+    qDebug() << "calib_xml_path = " << calib_xml_path.c_str();
+    Ecode ec = pR3_1->setCamera(0.02, para_csv_path, calib_xml_path); // 0.01 is just an example.
+    if (ec != Ecode::All_OK)
+    {
+        printf("Error: setCamera failed. para_csv_path=%s, calib_xml_path=%s \n",
+            para_csv_path.c_str(), calib_xml_path.c_str());
+        switch (ec)
+        {
+        case Ecode::SET_CAM_ERROR:
+            printf("Error: SET_CAM_ERROR \n");
+            break;
+        case Ecode::XML_PATH_ERROR:
+            printf("Error: XML_PATH_ERROR \n");
+            break;
+        case Ecode::CSV_PATH_ERROR:
+            printf("Error: CSV_PATH_ERROR \n");
+            break;
+        default:
+            printf("Error: UNKNOWN_ERROR \n");
+            break;
+        }
+        return false;
+    }
 }
 static cv::Mat convertToMatR(Sample::ImgTable & ImgT)
 {
@@ -119,6 +166,7 @@ int count = 0;
 void CamCaptureThread::run() {
 
 	while (!IsStopThread) {
+        QMutexLocker locker(&mutex);
 		Sample::ImgTable imgTable;
 		//try {
 			Ecode ec = pR3_1->getImageData(imgTable, 5000);
