@@ -118,6 +118,7 @@
   <ItemGroup>
     <ClCompile Include="CamCaptureThread.cpp" />
     <ClCompile Include="CameraTest.cpp" />
+    <ClCompile Include="cconfigmanager.cpp" />
     <ClCompile Include="CImageManager.cpp" />
     <ClCompile Include="circleProcessbyHalcon.cpp" />
     <ClCompile Include="ImageDecodThread.cpp" />
@@ -142,6 +143,9 @@
   <ItemGroup>
     <QtMoc Include="ImageDecodThread.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cconfigmanager.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />
@@ -150,7 +154,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties MocDir=".\GeneratedFiles\$(ConfigurationName)" UicDir=".\GeneratedFiles" RccDir=".\GeneratedFiles" lupdateOptions="" lupdateOnBuild="0" lreleaseOptions="" Qt5Version_x0020_x64="qt2015_64" MocOptions="" />
+      <UserProperties MocDir=".\GeneratedFiles\$(ConfigurationName)" UicDir=".\GeneratedFiles" RccDir=".\GeneratedFiles" lupdateOptions="" lupdateOnBuild="0" lreleaseOptions="" Qt5Version_x0020_x64="Qt5.9.6_64" MocOptions="" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
