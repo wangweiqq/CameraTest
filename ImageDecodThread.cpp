@@ -5,33 +5,59 @@
 #include <QDateTime>
 #include <QDebug>
 #include <HalconCpp.h>
+#include <cstdio>
 using namespace HalconCpp;
 
 extern Sample::ImgTable ImgTableDequeue();
 extern void CircleProcess(cv::Mat image);
 //extern bool CircleProcess(int type, cv::Mat img, cv::Point3i& point);
 
-HObject convertToHObject(Sample::ImgTable & ImgT)
+HObject convertToHObject(std::vector<float>& range, int width, int height)
 {
-	HObject dst = HObject();
+	/*HObject dst = HObject();
 	if (ImgT.range.empty())
 		return HObject();
 	HObject obgdst = HObject();
 	int height = ImgT.rows;
 	int width = ImgT.cols;
-	float *data = new float[width*height];
+	float* data = new float[width*height];
 	qDebug() << "&ImgT.range[0]:" << &ImgT.range[0];
-	for (size_t i = 0; i < ImgT.rows; i++)
+	for (int i = 0; i < ImgT.rows; i++)
 	{
 		memcpy(data + width*i, &ImgT.range[0] + width*i, width*4);
 	}
-	//GenImage1(&dst, 'real', width, height, (Hlong)data);
+	GenImage1(&dst, 'real', width, height, (Hlong)data);
 	std::ofstream of_2("test_range_to_h.txt");
 	of_2.write((char*)(data), sizeof(float)*width*height);
 	of_2.close();
 	delete[] data;
 	data = NULL;
+	return dst;*/
+	//方法二：
+	HObject dst = HObject();
+	float *HImage = new float[width * height];
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			if (std::isnan(range[i * width + j]))
+			{
+				range[i * width + j] = -1000;
+				HImage[i * width + j] = range[i * width + j];
+			}
+			else
+			{
+				
+				HImage[i * width + j] = range[i * width + j];
+			}
+			
+			
+		}
+	}
+	GenImage1(&dst, "real", width, height, (Hlong)HImage);
+	//WriteImage(dst, "tiff", 0, "haha0726");
 	return dst;
+	
 }
 
 static cv::Mat convertToMatR(Sample::ImgTable & ImgT)
@@ -83,13 +109,16 @@ void ImageDecodThread::run() {
 			msleep(500);
 		}
 		else {
-			cv::Mat t_range = convertToMatR(imgTable);
+			//cv::Mat t_range = convertToMatR(imgTable);
+			int width = imgTable.cols;		//image width
+			int height = imgTable.rows;		//image height
+			HObject HImage = convertToHObject(imgTable.range, width, height);
 			//sprintf(fileName, "D:/0724/g/%s.tiff", QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"))
 			//QString file = QString("D:/0724/g/%1.tiff").arg(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"));
 			//qDebug() << file;
 			//const char* f = file.toLocal8Bit();
 			//qDebug() << f;
-			cv::imwrite("D:/0724/g/1.tiff",t_range);
+			//cv::imwrite("D:/0724/g/1.tiff",t_range);
 
 			/*QString file = QString("D:/0722/%1.tiff").arg(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"));
 			qDebug() << file;
@@ -97,7 +126,7 @@ void ImageDecodThread::run() {
 			qDebug() << f;*/
 			/*HObject ht_range = convertToHObject(imgTable);
 			WriteImage(ht_range, "tiff", 0, "D:/0722/1.tiff");*/
-			CircleProcess(t_range);
+			//CircleProcess(t_range);
 
 			qDebug() << "解码结束";
 			//std::cout << "解码结束" << std::endl;
