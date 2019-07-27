@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QThread>
+#include <omp.h>
 class ImageDecodThread : public QThread
 {
 	Q_OBJECT

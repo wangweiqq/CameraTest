@@ -36,13 +36,15 @@ HObject convertToHObject(std::vector<float>& range, int width, int height)
 	//方法二：
 	HObject dst = HObject();
 	float *HImage = new float[width * height];
+#pragma omp parallel for
 	for (int i = 0; i < height; i++)
 	{
+#pragma omp parallel for
 		for (int j = 0; j < width; j++)
 		{
 			if (std::isnan(range[i * width + j]))
 			{
-				range[i * width + j] = -1000;
+				range[i * width + j] = -1;
 				HImage[i * width + j] = range[i * width + j];
 			}
 			else
@@ -55,7 +57,9 @@ HObject convertToHObject(std::vector<float>& range, int width, int height)
 		}
 	}
 	GenImage1(&dst, "real", width, height, (Hlong)HImage);
-	//WriteImage(dst, "tiff", 0, "haha0726");
+	delete[] HImage;
+	HImage = NULL;
+	//WriteImage(dst, "tiff", 0, "haha0727");
 	return dst;
 	
 }
@@ -112,21 +116,14 @@ void ImageDecodThread::run() {
 			//cv::Mat t_range = convertToMatR(imgTable);
 			int width = imgTable.cols;		//image width
 			int height = imgTable.rows;		//image height
-			HObject HImage = convertToHObject(imgTable.range, width, height);
-			//sprintf(fileName, "D:/0724/g/%s.tiff", QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"))
-			//QString file = QString("D:/0724/g/%1.tiff").arg(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"));
-			//qDebug() << file;
-			//const char* f = file.toLocal8Bit();
-			//qDebug() << f;
-			//cv::imwrite("D:/0724/g/1.tiff",t_range);
-
-			/*QString file = QString("D:/0722/%1.tiff").arg(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"));
+			HObject Hob_Image = convertToHObject(imgTable.range, width, height);
+			QString file = QString("D:/0727/%1.tiff").arg(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"));
 			qDebug() << file;
 			const char* f = file.toLocal8Bit();
-			qDebug() << f;*/
-			/*HObject ht_range = convertToHObject(imgTable);
-			WriteImage(ht_range, "tiff", 0, "D:/0722/1.tiff");*/
-			//CircleProcess(t_range);
+			qDebug() << f;
+
+			WriteImage(Hob_Image, "tiff", 0, file.toStdString().c_str());
+		
 
 			qDebug() << "解码结束";
 			//std::cout << "解码结束" << std::endl;
