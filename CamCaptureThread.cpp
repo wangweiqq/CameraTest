@@ -77,8 +77,8 @@ bool CamCaptureThread::InitCamDevice(QString csvPath, QString calibXml) {
 	}
 	qDebug() << "para_csv_path" << para_csv_path.c_str();
 	qDebug() << "calib_xml_path = " << calib_xml_path.c_str();
-	std::string para_csv_path = "D:\\SICKCameraConfig\\RightSickConfigFile.csv";
-	std::string calib_xml_path = "D:\\SICKCameraConfig\\Right-CalibrationResult.xml";
+	/*std::string para_csv_path = "D:\\SICKCameraConfig\\RightSickConfigFile.csv";
+	std::string calib_xml_path = "D:\\SICKCameraConfig\\Right-CalibrationResult.xml";*/
 	ec = pR3_1->setCamera(0.02, para_csv_path, calib_xml_path); // 0.01 is just an example.
 	if (ec != Ecode::All_OK)
 	{

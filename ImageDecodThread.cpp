@@ -107,6 +107,7 @@ ImageDecodThread* ImageDecodThread::Instance() {
 }
 void ImageDecodThread::run() {
 	//char fileName[1024];
+	int count = 1;
 	while (!IsStopThread) {
 		Sample::ImgTable imgTable = ImgTableDequeue();
 		if (imgTable.isEmpty()) {
@@ -117,7 +118,8 @@ void ImageDecodThread::run() {
 			int width = imgTable.cols;		//image width
 			int height = imgTable.rows;		//image height
 			HObject Hob_Image = convertToHObject(imgTable.range, width, height);
-			QString file = QString("D:/0727/%1.tiff").arg(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"));
+			//QString file = QString("D:/0727/test/%1.tiff").arg(QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz"));
+			QString file = QString("D:/0727/test/%1.tiff").arg(count++);
 			qDebug() << file;
 			const char* f = file.toLocal8Bit();
 			qDebug() << f;
